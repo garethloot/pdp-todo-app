@@ -11,17 +11,19 @@ const httpLink = createHttpLink({
   uri: "https://pdp-todo-app-dev.betty.app/api/runtime/bb79b5f831cb4120a2352e3a07aad4dc",
 });
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    console.log("graphQLErrors", graphQLErrors);
-  }
+const errorLink = onError(
+  ({ graphQLErrors, networkError, operation, forward }) => {
+    if (graphQLErrors) {
+      console.log("graphQLErrors", graphQLErrors);
+    }
 
-  // To retry on network errors, we recommend the RetryLink
-  // instead of the onError link. This just logs the error.
-  if (networkError) {
-    console.log(`[Network error]: ${networkError}`);
+    // To retry on network errors, we recommend the RetryLink
+    // instead of the onError link. This just logs the error.
+    if (networkError) {
+      console.log(`[Network error]: ${networkError}`);
+    }
   }
-});
+);
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
