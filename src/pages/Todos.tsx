@@ -8,7 +8,7 @@ const TodosPage: React.FC = () => {
   return (
     <div>
       <Typography variant="h1" component="h2">
-        Todos overview
+        To do's overview
       </Typography>
       <TodoList />
     </div>
