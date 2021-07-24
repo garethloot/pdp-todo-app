@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 
 import { TodoInterface } from "../types/todos";
 import { makeStyles } from "@material-ui/core/styles";
@@ -11,10 +11,11 @@ import {
   Checkbox,
   Paper,
   IconButton,
-  Switch,
   FormControlLabel,
-  FormGroup,
+  FormControl,
   Typography,
+  Radio,
+  RadioGroup,
 } from "@material-ui/core";
 import { Edit, Delete } from "@material-ui/icons";
 
@@ -72,15 +73,47 @@ const TodoItem: React.FC<TodoProps> = ({ todo }) => {
   );
 };
 
-const TodoList: React.FC<TodoListProps> = () => {
-  const classes = useStyles();
-  const [filter, setFilter] = useState({
-    hideCompleted: false,
-    hideNotCompleted: false,
-  });
+interface TodoFilterProps {
+  filterHandler: (value: boolean | undefined) => void;
+}
 
-  const changeCompletedHandler = () => {};
-  const changeNotCompletedHandler = () => {};
+const TodoFilter: React.FC<TodoFilterProps> = ({ filterHandler }) => {
+  const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    let value = undefined;
+    if (event.target.value === "completed") value = true;
+    if (event.target.value === "todo") value = false;
+    filterHandler(value);
+  };
+
+  return (
+    <FormControl component="fieldset">
+      <RadioGroup row name="filter" defaultValue="all">
+        <FormControlLabel
+          control={<Radio onChange={changeHandler} />}
+          label="All"
+          value="all"
+        />
+        <FormControlLabel
+          control={<Radio onChange={changeHandler} />}
+          label="Completed"
+          value="completed"
+        />
+        <FormControlLabel
+          control={<Radio onChange={changeHandler} />}
+          label="Todo"
+          value="todo"
+        />
+      </RadioGroup>
+    </FormControl>
+  );
+};
+
+interface TodosProps {
+  where: any;
+}
+
+const Todos: React.FC<TodosProps> = ({ where }) => {
+  const classes = useStyles();
   const TODOS_QUERY = gql`
     query ($where: TaskFilterInput!) {
       allTask(where: $where) {
@@ -93,7 +126,9 @@ const TodoList: React.FC<TodoListProps> = () => {
       }
     }
   `;
-  const { loading, error, data } = useQuery(TODOS_QUERY);
+  const { loading, error, data } = useQuery(TODOS_QUERY, {
+    variables: { where: where },
+  });
 
   if (loading) {
     return <></>;
@@ -105,30 +140,41 @@ const TodoList: React.FC<TodoListProps> = () => {
   const {
     allTask: { results },
   } = data;
+  return (
+    <List dense className={classes.list}>
+      {results.map((todo: TodoInterface) => {
+        return <TodoItem key={todo.id} todo={todo} />;
+      })}
+    </List>
+  );
+};
+
+const TodoList: React.FC<TodoListProps> = () => {
+  const classes = useStyles();
+  const [filter, setFilter] = useState<any>({});
+
+  const filterHandler = (value: boolean | undefined) => {
+    console.log(value);
+    let where = undefined;
+    if (value !== undefined) {
+      where = { _and: [{ completed: { eq: value } }] };
+    }
+    setFilter(where);
+  };
+  console.log(filter);
+
+  useEffect(() => {}, [filter]);
 
   return (
     <div className={classes.root}>
       <div className={classes.heading}>
         <Typography variant="h4" component="h4">
-          Todos
+          To do's
         </Typography>
-        <FormGroup row>
-          <FormControlLabel
-            control={<Switch onChange={changeCompletedHandler} />}
-            label="Hide completed"
-          />
-          <FormControlLabel
-            control={<Switch onChange={changeNotCompletedHandler} />}
-            label="Hide not completed"
-          />
-        </FormGroup>
+        <TodoFilter filterHandler={filterHandler} />
       </div>
 
-      <List dense className={classes.list}>
-        {results.map((todo: TodoInterface) => {
-          return <TodoItem todo={todo} />;
-        })}
-      </List>
+      <Todos where={filter} />
     </div>
   );
 };
