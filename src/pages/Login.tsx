@@ -101,6 +101,8 @@ const LoginPage: React.FC = () => {
       });
     }
   };
+
+  console.log("Render");
   return (
     <Grid
       container

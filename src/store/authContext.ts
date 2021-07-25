@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 export type Context = {
-  isAuthenticated: Boolean;
+  isAuthenticated: boolean;
   loginUser: (jwtToken: string, refreshToken: string) => void;
   logoutUser: () => void;
 };

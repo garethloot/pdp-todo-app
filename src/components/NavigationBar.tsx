@@ -25,17 +25,25 @@ const useStyles = makeStyles((theme) => ({
 interface LinkButtonProps {
   text: string;
   to: string;
+  authOnly?: boolean;
 }
 
-const LinkButton: React.FC<LinkButtonProps> = ({ text, to }) => {
+const LinkButton: React.FC<LinkButtonProps> = ({ text, to, authOnly }) => {
+  const appContext = useAppContext();
   const history = useHistory();
   const loginClickHandler = () => {
     history.push(to);
   };
-  return (
+  let show = true;
+  if (authOnly && appContext.isAuthenticated) {
+    show = appContext.isAuthenticated;
+  }
+  return show ? (
     <Button color="inherit" onClick={loginClickHandler}>
       {text}
     </Button>
+  ) : (
+    <></>
   );
 };
 

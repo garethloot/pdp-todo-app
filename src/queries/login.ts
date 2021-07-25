@@ -9,3 +9,13 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
+
+export const REFRESH_MUTATION = gql`
+  mutation refresh($token: String!) {
+    refreshToken(token: $token) {
+      isValid
+      jwtToken
+      refreshToken
+    }
+  }
+`;

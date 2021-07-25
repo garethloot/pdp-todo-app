@@ -1,3 +1,9 @@
-import { LOGIN_MUTATION } from "./login";
+import { LOGIN_MUTATION, REFRESH_MUTATION } from "./login";
+import { TODO_CREATE_MUTATION, TODO_DELETE_MUTATION } from "./todos";
 
-export { LOGIN_MUTATION };
+export {
+  LOGIN_MUTATION,
+  REFRESH_MUTATION,
+  TODO_CREATE_MUTATION,
+  TODO_DELETE_MUTATION,
+};

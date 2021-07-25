@@ -1,14 +1,13 @@
 import { Typography } from "@material-ui/core";
 
 // Components
-import TodoList from "../components/TodoList";
-import NewTodo from "../components/NewTodo";
+import TodoList from "./todos/TodoList";
 
 const TodosPage: React.FC = () => {
   return (
     <div>
       <Typography variant="h1" component="h2">
-        To do's overview
+        Task overview
       </Typography>
       <TodoList />
     </div>
