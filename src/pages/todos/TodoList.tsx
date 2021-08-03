@@ -1,7 +1,11 @@
-import React, { ChangeEvent, useState } from "react";
-import { ApolloError, useMutation } from "@apollo/client";
+import React, { ChangeEvent, useState, useEffect } from "react";
+import { useMutation } from "@apollo/client";
 
-import { TODO_DELETE_MUTATION } from "../../queries";
+import {
+  TODO_DELETE_MUTATION,
+  TODO_UPDATE_MUTATION,
+  TODOS_QUERY,
+} from "../../queries";
 
 import { TodoInterface } from "../../types/todos";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -21,18 +25,19 @@ import {
   RadioGroup,
   CircularProgress,
   Fade,
+  InputBase,
 } from "@material-ui/core";
-import { Edit, Delete } from "@material-ui/icons";
+import { Delete, KeyboardReturn, VideoLabelRounded } from "@material-ui/icons";
 
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 
 import NewTodo from "./NewTodo";
+import { valueFromAST } from "graphql";
 
 interface TodoListProps {}
 
 interface TodoProps {
   todo: TodoInterface;
-  refetch: Function;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,6 +53,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     width: "100%",
   },
+  input: {
+    flex: 1,
+  },
   item: {
     marginBottom: theme.spacing(2),
     paddingTop: "2px",
@@ -57,58 +65,143 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface InputVars {
   input: any;
-  application_identifier: string;
 }
 
-const TodoItem: React.FC<TodoProps> = ({ todo, refetch }) => {
+const TodoItem: React.FC<TodoProps> = ({ todo: item }) => {
   const classes = useStyles();
-  const [completed, setCompleted] = useState(todo.completed);
-  const [loginMutation, { loading }] = useMutation<any, InputVars>(
-    TODO_DELETE_MUTATION,
+  const [value, setValue] = useState<{
+    todo: TodoInterface;
+    prev: TodoInterface;
+    hasChange: boolean;
+  }>({ todo: item, prev: item, hasChange: false });
+  const [visible, setVisible] = useState(true);
+
+  const [deleteMutation, { loading: deleteLoading }] = useMutation<
+    any,
+    InputVars
+  >(TODO_DELETE_MUTATION, {
+    onCompleted: (data) => {},
+    onError: (error) => {
+      setVisible(true);
+    },
+  });
+
+  const [updateMutation, { loading }] = useMutation<any, InputVars>(
+    TODO_UPDATE_MUTATION,
     {
       onCompleted: (data) => {
-        refetch();
+        setValue((prevValue) => {
+          return {
+            todo: prevValue.todo,
+            prev: prevValue.todo,
+            hasChange: false,
+          };
+        });
       },
-      onError: (error) => {},
+      onError: (error) => {
+        setValue((prevValue) => {
+          return {
+            todo: prevValue.prev,
+            prev: prevValue.prev,
+            hasChange: false,
+          };
+        });
+      },
     }
   );
 
   const deleteHandler = (event: React.FormEvent) => {
-    event.preventDefault();
-    loginMutation({
+    deleteMutation({
       variables: {
-        application_identifier: "pdp-todo-app-dev",
-        input: { form_data: { id: todo.id } },
+        input: { form_data: value.todo },
       },
     });
+    setVisible(false);
   };
-  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCompleted(event.target.checked);
+
+  const changeCompletedHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setValue((prevValue) => {
+      const newTodo = { ...prevValue.todo, completed: event.target.checked };
+      return { todo: newTodo, prev: prevValue.todo, hasChange: true };
+    });
   };
-  return (
+
+  const changeNameHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((prevValue) => {
+      const newTodo = { ...prevValue.todo, name: event.target.value };
+      return { todo: newTodo, prev: prevValue.prev, hasChange: false };
+    });
+  };
+
+  const applyChanges = () => {
+    if (value.todo.name !== value.prev.name) {
+      setValue((prevValue) => {
+        return { todo: prevValue.todo, prev: prevValue.todo, hasChange: true };
+      });
+    }
+  };
+
+  const onKeyPress = (event: React.KeyboardEvent) => {
+    if (event.code === "Enter") {
+      applyChanges();
+    }
+  };
+
+  useEffect(() => {
+    if (value.hasChange) {
+      updateMutation({
+        variables: {
+          input: { form_data: value.todo },
+        },
+      });
+    }
+  }, [value]);
+
+  const { todo } = value;
+
+  return visible ? (
     <Fade in>
       <Paper className={classes.item}>
         <ListItem>
           <ListItemIcon>
             <Checkbox
               edge="start"
-              checked={completed}
-              onChange={changeHandler}
+              checked={todo.completed}
+              onChange={changeCompletedHandler}
               disabled={loading}
             />
           </ListItemIcon>
-          <ListItemText id={todo.id.toString()} primary={todo.name} />
+          <InputBase
+            className={classes.input}
+            value={todo.name}
+            onChange={changeNameHandler}
+            onBlur={applyChanges}
+            disabled={loading}
+            required
+            onKeyPress={onKeyPress}
+          />
           <ListItemSecondaryAction>
-            <IconButton disabled={loading}>
-              <Edit />
-            </IconButton>
+            {loading && (
+              <IconButton onClick={applyChanges}>
+                <CircularProgress size={24} />
+              </IconButton>
+            )}
+            {value.todo.name !== value.prev.name && (
+              <IconButton>
+                <KeyboardReturn />
+              </IconButton>
+            )}
             <IconButton edge="end" onClick={deleteHandler} disabled={loading}>
-              {loading ? <CircularProgress size={24} /> : <Delete />}
+              <Delete />
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem>
       </Paper>
     </Fade>
+  ) : (
+    <></>
   );
 };
 
@@ -148,18 +241,15 @@ const TodoFilter: React.FC<TodoFilterProps> = ({ filterHandler }) => {
 };
 
 interface TodosProps {
-  loading: boolean;
-  error: ApolloError | undefined;
   results: any;
-  refetch: Function;
 }
 
-const Todos: React.FC<TodosProps> = ({ loading, error, results, refetch }) => {
+const Todos: React.FC<TodosProps> = ({ results }) => {
   const classes = useStyles();
   return (
     <List dense className={classes.list}>
       {results.map((todo: TodoInterface) => {
-        return <TodoItem key={todo.id} todo={todo} refetch={refetch} />;
+        return <TodoItem key={todo.id} todo={todo} />;
       })}
     </List>
   );
@@ -178,19 +268,8 @@ const TodoList: React.FC<TodoListProps> = () => {
     setFilter(where);
   };
 
-  const TODOS_QUERY = gql`
-    query ($where: TaskFilterInput!) {
-      allTask(where: $where) {
-        results {
-          id
-          name
-          completed
-        }
-        totalCount
-      }
-    }
-  `;
   const { loading, error, data, refetch } = useQuery(TODOS_QUERY, {
+    fetchPolicy: "network-only",
     variables: { where: filter },
   });
 
@@ -208,12 +287,7 @@ const TodoList: React.FC<TodoListProps> = () => {
         <TodoFilter filterHandler={filterHandler} />
       </div>
 
-      <Todos
-        loading={loading}
-        error={error}
-        results={results}
-        refetch={refetch}
-      />
+      <Todos results={results} />
       <NewTodo refetch={refetch} />
     </div>
   );
