@@ -1,9 +1,7 @@
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useState, useRef } from "react";
 import { useMutation } from "@apollo/client";
 
-import { TODO_CREATE_MUTATION } from "../../queries";
-
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import {
   Paper,
   InputBase,
@@ -13,6 +11,9 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { KeyboardReturn } from "@material-ui/icons";
+
+import { TodoInputVars, NewTodoProps } from "../../types/todos";
+import { TODO_CREATE_MUTATION } from "../../queries/todos";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,15 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface NewTodoProps {
-  refetch: Function;
-}
-
-interface InputVars {
-  input: any;
-  application_identifier: string;
-}
-
 const NewTodo: React.FC<NewTodoProps> = ({ refetch }) => {
   const classes = useStyles();
   const [formData, setFormData] = useState<{
@@ -54,7 +46,7 @@ const NewTodo: React.FC<NewTodoProps> = ({ refetch }) => {
   }>({ name: "", completed: false });
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [loginMutation, { loading }] = useMutation<any, InputVars>(
+  const [loginMutation, { loading }] = useMutation<any, TodoInputVars>(
     TODO_CREATE_MUTATION,
     {
       onCompleted: (data) => {
@@ -73,7 +65,6 @@ const NewTodo: React.FC<NewTodoProps> = ({ refetch }) => {
     event.preventDefault();
     loginMutation({
       variables: {
-        application_identifier: "pdp-todo-app-dev",
         input: { form_data: formData },
       },
     });

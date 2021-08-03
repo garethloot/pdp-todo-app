@@ -3,27 +3,27 @@ import { useMutation } from "@apollo/client";
 import { REFRESH_MUTATION } from "../queries";
 
 import { CircularProgress, Fade } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import { AppContext } from "../store/authContext";
+import { RefreshLoginInputVars } from "../types/auth";
 
 export const useAppContext = () => useContext(AppContext);
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     height: "100vh",
     width: "100vw",
   },
 }));
 
-interface InputVars {
-  token: string;
-}
-
 const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const classes = useStyles();
   const [isAuthenticated, setAuthentication] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
   const loginUser = (jwtToken: string, refreshToken: string) => {
@@ -38,7 +38,7 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
     setAuthentication(false);
   };
 
-  const [loginMutation, { loading, data }] = useMutation<any, InputVars>(
+  const [loginMutation] = useMutation<any, RefreshLoginInputVars>(
     REFRESH_MUTATION,
     {
       onCompleted: (data) => {
@@ -75,9 +75,9 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   return firstLoad ? (
-    <div>
+    <div className={classes.root}>
       <Fade in>
-        <CircularProgress color="secondary" />
+        <CircularProgress size={100} color="secondary" thickness={1} />
       </Fade>
     </div>
   ) : (
