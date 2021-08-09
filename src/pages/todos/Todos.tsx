@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Todos: React.FC<TodosProps> = ({ results }) => {
   const classes = useStyles();
   return (
-    <List dense className={classes.list}>
+    <List dense disablePadding className={classes.list}>
       {results.map((todo: TodoInterface) => {
         return <TodoItem key={todo.id} todo={todo} />;
       })}

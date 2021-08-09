@@ -46,11 +46,9 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
         if (isValid) {
           loginUser(jwtToken, refreshToken);
         }
-        console.log("Complete");
         setFirstLoad(false);
       },
       onError: (error) => {
-        console.log("Error");
         setFirstLoad(false);
       },
     }
@@ -70,7 +68,6 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    console.log("Mount");
     checkLogin();
   }, []);
 

@@ -14,13 +14,13 @@ const httpLink = createHttpLink({
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
-      console.log("graphQLErrors", graphQLErrors);
+      // console.log("graphQLErrors", graphQLErrors);
     }
 
     // To retry on network errors, we recommend the RetryLink
     // instead of the onError link. This just logs the error.
     if (networkError) {
-      console.log(`[Network error]: ${networkError}`);
+      // console.log(`[Network error]: ${networkError}`);
     }
   }
 );

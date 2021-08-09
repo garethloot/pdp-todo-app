@@ -14,16 +14,20 @@ import {
   Container,
   Paper,
   Button,
-  TextField,
+  TextField as MuiTextField,
   Typography,
   CircularProgress,
   Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
+import TextField from "../components/TextField";
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "80%",
+    height: "100%",
+    backgroundImage: `url("/img/login.jpg")`,
+    backgroundSize: "cover",
   },
   paper: {
     padding: "20px",
@@ -65,7 +69,7 @@ const LoginPage: React.FC = () => {
         const { isValid, jwtToken, refreshToken } = data.login;
         if (isValid) {
           appContext.loginUser(jwtToken, refreshToken);
-          history.push("/todos");
+          history.push("/mytasks");
         }
       },
       onError: (error) => {},
@@ -117,27 +121,29 @@ const LoginPage: React.FC = () => {
             <div>
               <TextField
                 value={formData.username}
-                name="username"
-                type="email"
-                required
                 label="Email"
                 variant="outlined"
                 margin="normal"
-                fullWidth
+                type="email"
+                name="username"
                 onChange={changeHandler}
+                required
+                requiredErrorText="This field is required"
+                fullWidth
               />
             </div>
             <div>
               <TextField
                 value={formData.password}
-                name="password"
-                type="password"
-                required
                 label="Password"
                 variant="outlined"
                 margin="normal"
-                fullWidth
+                type="password"
+                name="password"
                 onChange={changeHandler}
+                required
+                requiredErrorText="This field is required"
+                fullWidth
               />
             </div>
             <Box className={classes.buttons}>

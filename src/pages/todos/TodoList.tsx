@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { TODOS_QUERY } from "../../queries/todos";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
+import { Typography, Paper, Divider } from "@material-ui/core";
 
 import NewTodo from "./NewTodo";
 import TodoFilter from "./TodoFilter";
@@ -13,11 +13,11 @@ import Todos from "./Todos";
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
-    padding: theme.spacing(1),
-    boxSizing: "border-box",
   },
   heading: {
     display: "flex",
+    padding: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
     justifyContent: "space-between",
   },
   list: {
@@ -25,7 +25,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TodoList: React.FC = () => {
+interface TodoListProps {
+  title: string;
+}
+
+const TodoList: React.FC<TodoListProps> = ({ title }) => {
   const classes = useStyles();
   const [filter, setFilter] = useState<any>({});
 
@@ -49,17 +53,17 @@ const TodoList: React.FC = () => {
   }
 
   return (
-    <div className={classes.root}>
+    <Paper className={classes.root} elevation={2}>
       <div className={classes.heading}>
         <Typography variant="h4" component="h4">
-          To do's
+          {title}
         </Typography>
         <TodoFilter filterHandler={filterHandler} />
       </div>
-
+      <Divider />
       <Todos results={results} />
       <NewTodo refetch={refetch} />
-    </div>
+    </Paper>
   );
 };
 
