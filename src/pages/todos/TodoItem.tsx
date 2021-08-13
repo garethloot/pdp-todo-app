@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
-import { ApolloError } from "@apollo/client/errors";
 
 import getErrorText from "../../helpers/getErrorText";
 
@@ -125,7 +124,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item }) => {
 
   const { todo } = value;
 
-  let errorText = getErrorText(updateError) || getErrorText(deleteError);
+  const errorText = getErrorText(updateError) || getErrorText(deleteError);
 
   return visible ? (
     <Fade in>

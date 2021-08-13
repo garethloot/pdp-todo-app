@@ -3,6 +3,8 @@ import { useMutation } from "@apollo/client";
 
 import { useHistory } from "react-router";
 
+import getErrorText from "../helpers/getErrorText";
+
 import { useAppContext } from "../components/AppContextProvider";
 
 import { LOGIN_MUTATION } from "../queries";
@@ -22,6 +24,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 
 import TextField from "../components/TextField";
+import Alert from "../components/Alert";
+import { setTimeout } from "timers";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,7 +66,7 @@ const LoginPage: React.FC = () => {
     password: string;
   }>({ username: "", password: "" });
 
-  const [loginMutation, { loading }] = useMutation<any, InputVars>(
+  const [loginMutation, { loading, error }] = useMutation<any, InputVars>(
     LOGIN_MUTATION,
     {
       onCompleted: (data) => {
@@ -106,7 +110,8 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  console.log("Render");
+  const errorText = getErrorText(error);
+
   return (
     <Grid
       container
@@ -145,6 +150,9 @@ const LoginPage: React.FC = () => {
                 requiredErrorText="This field is required"
                 fullWidth
               />
+            </div>
+            <div>
+              {errorText && <Alert severity="error" text={errorText} />}
             </div>
             <Box className={classes.buttons}>
               <Button
