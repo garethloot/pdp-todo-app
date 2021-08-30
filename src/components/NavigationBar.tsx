@@ -42,7 +42,8 @@ const NavigationBar: React.FC = () => {
         <Typography variant="h6" className={classes.title}>
           Todo Application
         </Typography>
-        <LinkButton text="My Tasks" to="/mytasks" />
+        <LinkButton text="My Tasks" to="/" />
+        <LinkButton text="Test" to="/test" />
         {!appContext.isAuthenticated && <LinkButton text="Login" to="/login" />}
         {appContext.isAuthenticated && (
           <Button onClick={logoutHandler} color="inherit">

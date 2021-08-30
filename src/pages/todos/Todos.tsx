@@ -13,12 +13,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Todos: React.FC<TodosProps> = ({ results }) => {
+const Todos: React.FC<TodosProps> = ({ todos, onDeleteTodo }) => {
   const classes = useStyles();
   return (
     <List dense disablePadding className={classes.list}>
-      {results.map((todo: TodoInterface) => {
-        return <TodoItem key={todo.id} todo={todo} />;
+      {todos.map((todo: TodoInterface) => {
+        return (
+          <TodoItem key={todo.id} todo={todo} onDeleteTodo={onDeleteTodo} />
+        );
       })}
     </List>
   );

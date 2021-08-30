@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo: item }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo: item, onDeleteTodo }) => {
   const classes = useStyles();
   const [value, setValue] = useState<{
     todo: TodoInterface;
@@ -43,7 +43,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item }) => {
     any,
     TodoInputVars
   >(TODO_DELETE_MUTATION, {
-    onCompleted: (data) => {},
+    onCompleted: (data) => {
+      onDeleteTodo(todo);
+    },
     onError: (error) => {
       setVisible(true);
     },
@@ -120,7 +122,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item }) => {
         },
       });
     }
-  }, [value]);
+  }, [value, updateMutation]);
 
   const { todo } = value;
 

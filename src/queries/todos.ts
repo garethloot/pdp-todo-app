@@ -19,8 +19,8 @@ export const TODO_UPDATE_MUTATION = gql`
 `;
 
 export const TODOS_QUERY = gql`
-  query ($where: TaskFilterInput!) {
-    allTask(where: $where) {
+  query ($where: TaskFilterInput!, $take: Number!) {
+    allTask(where: $where, take: $take) {
       results {
         id
         name

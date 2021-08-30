@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const NewTodo: React.FC<NewTodoProps> = ({ refetch }) => {
+const NewTodo: React.FC<NewTodoProps> = ({ onNewTodo }) => {
   const classes = useStyles();
   const [formData, setFormData] = useState<{
     name: string;
@@ -57,7 +57,8 @@ const NewTodo: React.FC<NewTodoProps> = ({ refetch }) => {
           completed: false,
         });
         inputRef.current?.focus();
-        refetch();
+        const { id, completed, name } = data.actionb5;
+        onNewTodo({ id, completed, name });
       },
       onError: (error) => {},
     }
@@ -80,6 +81,7 @@ const NewTodo: React.FC<NewTodoProps> = ({ refetch }) => {
         <Checkbox
           className={classes.checkbox}
           checked={formData.completed}
+          color="primary"
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setFormData((prevState) => {
               return { ...prevState, completed: event.target.checked };

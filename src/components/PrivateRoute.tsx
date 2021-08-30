@@ -4,6 +4,7 @@ import { useAppContext } from "./AppContextProvider";
 
 interface PrivateRouteProps {
   path: string;
+  exact: boolean;
 }
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, ...rest }) => {
   const appContext = useAppContext();

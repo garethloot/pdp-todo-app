@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
         const { isValid, jwtToken, refreshToken } = data.login;
         if (isValid) {
           appContext.loginUser(jwtToken, refreshToken);
-          history.push("/mytasks");
+          history.push("/");
         }
       },
       onError: (error) => {},

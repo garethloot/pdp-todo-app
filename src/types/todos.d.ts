@@ -5,6 +5,7 @@ export interface TodoInterface {
 }
 export interface TodoItemProps {
   todo: TodoInterface;
+  onDeleteTodo: Function;
 }
 export interface TodoInputVars {
   input: any;
@@ -14,8 +15,9 @@ export interface TodoFilterProps {
 }
 
 export interface TodosProps {
-  results: any;
+  todos: TodoInterface[];
+  onDeleteTodo: Function;
 }
 export interface NewTodoProps {
-  refetch: Function;
+  onNewTodo: Function;
 }

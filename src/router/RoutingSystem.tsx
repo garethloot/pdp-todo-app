@@ -9,7 +9,7 @@ const RoutingSystem: React.FC = ({ children }) => {
     <Router>
       {children}
       <Switch>
-        <PrivateRoute path="/mytasks">
+        <PrivateRoute exact path="/">
           <TodosPage />
         </PrivateRoute>
 
