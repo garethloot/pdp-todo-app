@@ -6,9 +6,10 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
+import { API_URL } from "../config";
 
 const httpLink = createHttpLink({
-  uri: "https://pdp-todo-app-dev.betty.app/api/runtime/bb79b5f831cb4120a2352e3a07aad4dc",
+  uri: API_URL,
 });
 
 const errorLink = onError(

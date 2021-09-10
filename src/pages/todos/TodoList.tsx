@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useQuery, useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { useInView } from "react-intersection-observer";
+import { API_TASK_TAKE } from "../../config";
 
 import { TODOS_QUERY } from "../../queries/todos";
 import { TodoInterface } from "../../types/todos";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { Typography, Paper, Divider } from "@material-ui/core";
-import { LinearProgress } from "@material-ui/core";
+import {
+  Typography,
+  Paper,
+  Divider,
+  Button,
+  LinearProgress,
+} from "@material-ui/core";
+import { Sync } from "@material-ui/icons";
 
 import NewTodo from "./NewTodo";
 import TodoFilter from "./TodoFilter";
@@ -28,20 +36,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   space: {
     height: "4px",
   },
+  getMore: {
+    marginTop: theme.spacing(1),
+  },
+  alignCenter: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 interface TodoListProps {
   title: string;
 }
 
-// Get data on first mount
-// Get data on demand when needed
-// Get more data
-
 const TodoList: React.FC<TodoListProps> = ({ title }) => {
   const classes = useStyles();
   const [filter, setFilter] = useState<any>({});
   const [todos, setTodos] = useState<TodoInterface[]>([]);
+  const [page, setPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const { ref, inView, entry } = useInView({
+    threshold: 1,
+  });
 
   const filterHandler = (value: boolean | undefined): void => {
     let where = undefined;
@@ -49,13 +67,23 @@ const TodoList: React.FC<TodoListProps> = ({ title }) => {
       where = { _and: [{ completed: { eq: value } }] };
     }
     setFilter(where);
+    setPage(0);
   };
 
-  const [getTodos, { loading }] = useLazyQuery(TODOS_QUERY, {
+  const { loading, data } = useQuery(TODOS_QUERY, {
     fetchPolicy: "network-only",
-    variables: { where: filter, take: 5 },
+    variables: {
+      where: filter,
+      take: API_TASK_TAKE,
+      skip: API_TASK_TAKE * page,
+    },
     onCompleted: (response) => {
-      setTodos(response.allTask.results);
+      if (page === 0) {
+        setTodos(response.allTask.results);
+      } else {
+        setTodos((prev) => [...prev, ...response.allTask.results]);
+      }
+      setTotalCount((data && data.allTask && data.allTask.totalCount) || 0);
     },
   });
 
@@ -71,21 +99,49 @@ const TodoList: React.FC<TodoListProps> = ({ title }) => {
     });
   };
 
-  useEffect(() => getTodos(), [getTodos]);
+  const count = todos.length;
+  const getMore = totalCount > count;
+
+  const getNextPage = () => {
+    setPage((prev) => (getMore ? prev + 1 : prev));
+  };
+
+  useEffect(() => {
+    if (inView) {
+      getNextPage();
+    }
+  }, [inView]);
 
   return (
-    <Paper className={classes.root} elevation={2}>
-      <div className={classes.heading}>
-        <Typography variant="h4" component="h4">
-          {title}
-        </Typography>
-        <TodoFilter filterHandler={filterHandler} />
-      </div>
-      {loading ? <LinearProgress /> : <div className={classes.space}></div>}
-      <Divider />
-      <Todos todos={todos} onDeleteTodo={deleteTodo} />
-      <NewTodo onNewTodo={addTodo} />
-    </Paper>
+    <>
+      <Paper className={classes.root} elevation={2}>
+        <div className={classes.heading}>
+          <Typography variant="h4" component="h4">
+            {title}
+          </Typography>
+
+          <TodoFilter filterHandler={filterHandler} />
+        </div>
+        {loading ? <LinearProgress /> : <div className={classes.space}></div>}
+        <Divider />
+        <Todos todos={todos} onDeleteTodo={deleteTodo} />
+        <NewTodo onNewTodo={addTodo} />
+      </Paper>
+      {getMore && (
+        <div className={classes.alignCenter}>
+          <Button
+            onClick={getNextPage}
+            ref={ref}
+            disabled={loading}
+            variant="outlined"
+            startIcon={<Sync />}
+            className={classes.getMore}
+          >
+            Get more (Showing {count}/{totalCount})
+          </Button>
+        </div>
+      )}
+    </>
   );
 };
 
