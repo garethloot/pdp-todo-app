@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@apollo/client";
 import { useInView } from "react-intersection-observer";
 import { API_TASK_TAKE } from "../../config";
@@ -102,15 +102,15 @@ const TodoList: React.FC<TodoListProps> = ({ title }) => {
   const count = todos.length;
   const getMore = totalCount > count;
 
-  const getNextPage = () => {
+  const getNextPage = useCallback(() => {
     setPage((prev) => (getMore ? prev + 1 : prev));
-  };
+  }, [setPage, getMore]);
 
   useEffect(() => {
     if (inView) {
       getNextPage();
     }
-  }, [inView]);
+  }, [inView, getNextPage]);
 
   return (
     <>
