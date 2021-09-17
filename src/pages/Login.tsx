@@ -16,7 +16,6 @@ import {
   Container,
   Paper,
   Button,
-  TextField as MuiTextField,
   Typography,
   CircularProgress,
   Box,
@@ -25,7 +24,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import TextField from "../components/TextField";
 import Alert from "../components/Alert";
-import { setTimeout } from "timers";
 
 const useStyles = makeStyles((theme) => ({
   root: {

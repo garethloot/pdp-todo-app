@@ -11,7 +11,7 @@ export interface TodoInputVars {
   input: any;
 }
 export interface TodoFilterProps {
-  filterHandler: (value: boolean | undefined) => void;
+  filterHandler: (value?: boolean) => void;
 }
 
 export interface TodosProps {

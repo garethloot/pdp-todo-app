@@ -57,7 +57,7 @@ const TodoList: React.FC<TodoListProps> = ({ title }) => {
   const [page, setPage] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
 
-  const { ref, inView, entry } = useInView({
+  const { ref, inView } = useInView({
     threshold: 1,
   });
 
