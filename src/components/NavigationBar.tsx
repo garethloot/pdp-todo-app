@@ -41,7 +41,7 @@ const NavigationBar: React.FC = () => {
           <CloudDone />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
-          Todo Application
+          Task manager
         </Typography>
         <LinkButton text="My Tasks" to="/" />
         <LinkButton text="404" to="/some-unknown-url" />
