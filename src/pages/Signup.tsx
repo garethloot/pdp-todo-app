@@ -6,8 +6,6 @@ import { useHistory } from "react-router";
 import getErrorText from "../helpers/getErrorText";
 import { Link } from "react-router-dom";
 
-import { useAppContext } from "../components/AppContextProvider";
-
 import { SIGNUP_MUTATION } from "../queries";
 
 // import { useLocation } from "react-router-dom";
@@ -76,7 +74,7 @@ const SignupPage: React.FC = () => {
     SIGNUP_MUTATION,
     {
       onCompleted: (data) => {
-        // history.push("/login");
+        history.push("/login");
       },
       onError: (error) => {},
     }
