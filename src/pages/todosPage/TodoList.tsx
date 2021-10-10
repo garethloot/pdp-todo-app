@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@apollo/client";
 import { useInView } from "react-intersection-observer";
 import { API_TASK_TAKE } from "../../config";
+import { todoFilter } from "../../types/todoFilter";
 
 import { TODOS_QUERY } from "../../queries/todos";
 import { TodoInterface } from "../../types/todos";
@@ -24,11 +25,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
   },
-  heading: {
+  search: {
     display: "flex",
     padding: theme.spacing(1),
     paddingLeft: theme.spacing(2),
     justifyContent: "space-between",
+  },
+  heading: {
+    padding: theme.spacing(2),
   },
   list: {
     width: "100%",
@@ -52,7 +56,10 @@ interface TodoListProps {
 
 const TodoList: React.FC<TodoListProps> = ({ title }) => {
   const classes = useStyles();
-  const [filter, setFilter] = useState<any>({});
+  const [filter, setFilter] = useState<todoFilter>({
+    name: "",
+    completed: undefined,
+  });
   const [todos, setTodos] = useState<TodoInterface[]>([]);
   const [page, setPage] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
@@ -61,19 +68,24 @@ const TodoList: React.FC<TodoListProps> = ({ title }) => {
     threshold: 1,
   });
 
-  const filterHandler = (value: boolean | undefined): void => {
-    let where = undefined;
-    if (value !== undefined) {
-      where = { _and: [{ completed: { eq: value } }] };
-    }
-    setFilter(where);
-    setPage(0);
+  const createFilter = () => {
+    const nameFilter =
+      filter.name !== "" ? { name: { matches: filter.name } } : undefined;
+    const completedFilter =
+      filter.completed !== undefined
+        ? { completed: { eq: filter.completed } }
+        : undefined;
+    const isEmpty = nameFilter === undefined && completedFilter === undefined;
+    const _and = [];
+    if (nameFilter) _and.push(nameFilter);
+    if (completedFilter) _and.push(completedFilter);
+    return isEmpty ? {} : { _and };
   };
 
   const { loading, data } = useQuery(TODOS_QUERY, {
     fetchPolicy: "network-only",
     variables: {
-      where: filter,
+      where: createFilter(),
       take: API_TASK_TAKE,
       skip: API_TASK_TAKE * page,
     },
@@ -115,12 +127,11 @@ const TodoList: React.FC<TodoListProps> = ({ title }) => {
   return (
     <>
       <Paper className={classes.root} elevation={2}>
-        <div className={classes.heading}>
-          <Typography variant="h4" component="h4">
-            {title}
-          </Typography>
-
-          <TodoFilter filterHandler={filterHandler} />
+        <Typography variant="h4" component="h4" className={classes.heading}>
+          {title}
+        </Typography>
+        <div className={classes.search}>
+          <TodoFilter filterHandler={setFilter} />
         </div>
         {loading ? <LinearProgress /> : <div className={classes.space}></div>}
         <Divider />

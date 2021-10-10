@@ -1,3 +1,4 @@
+import { todoFilter } from "./todoFilter";
 export interface TodoInterface {
   id: number;
   name: string;
@@ -11,7 +12,7 @@ export interface TodoInputVars {
   input: any;
 }
 export interface TodoFilterProps {
-  filterHandler: (value?: boolean) => void;
+  filterHandler: (value: todoFilter) => void;
 }
 
 export interface TodosProps {

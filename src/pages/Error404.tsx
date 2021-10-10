@@ -1,3 +1,4 @@
+import { useHistory } from "react-router";
 import {
   Grid,
   Container,
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Page: React.FC = () => {
   const classes = useStyles();
+  let history = useHistory();
   return (
     <Grid
       container
@@ -46,7 +48,12 @@ const Page: React.FC = () => {
             This page does not exist or you do not have access.
           </Typography>
           <Box className={classes.buttons}>
-            <Button href="/" type="button" variant="contained" color="primary">
+            <Button
+              onClick={() => history.push("/")}
+              type="button"
+              variant="contained"
+              color="primary"
+            >
               Go to my tasks
             </Button>
           </Box>

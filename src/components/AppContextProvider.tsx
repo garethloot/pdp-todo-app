@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { useMutation } from "@apollo/client";
 import { REFRESH_MUTATION } from "../queries";
 
@@ -54,7 +54,7 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   );
 
-  const checkLogin = () => {
+  const checkLogin = useCallback(() => {
     const token = window.localStorage.getItem("refresh_token");
     if (token) {
       loginMutation({
@@ -65,11 +65,11 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       setFirstLoad(false);
     }
-  };
+  }, [setFirstLoad, loginMutation]);
 
   useEffect(() => {
     checkLogin();
-  }, []);
+  }, [checkLogin]);
 
   return firstLoad ? (
     <div className={classes.root}>

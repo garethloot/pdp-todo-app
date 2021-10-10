@@ -1,4 +1,5 @@
 import { useAppContext } from "./AppContextProvider";
+import { useHistory } from "react-router";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import {
   AppBar,
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const NavigationBar: React.FC = () => {
   const classes = useStyles();
+  const history = useHistory();
   const appContext = useAppContext();
 
   const logoutHandler = () => {
@@ -47,7 +49,13 @@ const NavigationBar: React.FC = () => {
         <LinkButton text="404" to="/some-unknown-url" />
         {!appContext.isAuthenticated && <LinkButton text="Login" to="/login" />}
         {appContext.isAuthenticated && (
-          <Button onClick={logoutHandler} color="inherit">
+          <Button
+            onClick={() => {
+              history.push("/login");
+              logoutHandler();
+            }}
+            color="inherit"
+          >
             Logout
           </Button>
         )}
