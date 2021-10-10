@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { Link } from "react-router-dom";
 
 import { useHistory } from "react-router";
 
 import getErrorText from "../helpers/getErrorText";
+import { Link } from "react-router-dom";
 
 import { useAppContext } from "../components/AppContextProvider";
 
-import { LOGIN_MUTATION } from "../queries";
+import { SIGNUP_MUTATION } from "../queries";
 
 // import { useLocation } from "react-router-dom";
 
@@ -41,42 +41,42 @@ const useStyles = makeStyles((theme) => ({
   progress: {
     marginLeft: "10px",
   },
+  names: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
   inputMargin: {
     marginRight: theme.spacing(1),
   },
 }));
 
-// interface LocationState {
-//   from: {
-//     pathname: string;
-//   };
-// }
-
 interface InputVars {
-  profile: string;
-  username: string;
-  password: string;
+  input: {
+    form_data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      password: string;
+    };
+  };
 }
 
-const LoginPage: React.FC = () => {
+const SignupPage: React.FC = () => {
   const classes = useStyles();
-  const appContext = useAppContext();
   const history = useHistory();
 
   const [formData, setFormData] = useState<{
-    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
     password: string;
-  }>({ username: "", password: "" });
+  }>({ firstName: "", lastName: "", email: "", password: "" });
 
-  const [loginMutation, { loading, error }] = useMutation<any, InputVars>(
-    LOGIN_MUTATION,
+  const [signupMutation, { loading, error }] = useMutation<any, InputVars>(
+    SIGNUP_MUTATION,
     {
       onCompleted: (data) => {
-        const { isValid, jwtToken, refreshToken } = data.login;
-        if (isValid) {
-          appContext.loginUser(jwtToken, refreshToken);
-          history.push("/");
-        }
+        // history.push("/login");
       },
       onError: (error) => {},
     }
@@ -84,32 +84,27 @@ const LoginPage: React.FC = () => {
 
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    loginMutation({
+    signupMutation({
       variables: {
-        profile: "59a728ee56814c6fae14417826d9e0b4",
-        username: formData.username,
-        password: formData.password,
+        input: {
+          form_data: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            password: formData.password,
+          },
+        },
       },
     });
   };
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.name === "username") {
-      setFormData((prevState) => {
-        return {
-          ...prevState,
-          username: event.target.value,
-        };
-      });
-    }
-    if (event.target.name === "password") {
-      setFormData((prevState) => {
-        return {
-          ...prevState,
-          password: event.target.value,
-        };
-      });
-    }
+    setFormData((prevState) => {
+      return {
+        ...prevState,
+        [event.target.name]: event.target.value,
+      };
+    });
   };
 
   const errorText = getErrorText(error);
@@ -124,15 +119,42 @@ const LoginPage: React.FC = () => {
       <Container maxWidth="sm">
         <Paper className={classes.paper} elevation={3}>
           <form onSubmit={submitHandler} autoComplete="off">
-            <Typography variant="h3">Login</Typography>
+            <Typography variant="h3">Signup</Typography>
+            <div className={classes.names}>
+              <TextField
+                value={formData.firstName}
+                label="First name"
+                variant="outlined"
+                margin="normal"
+                type="text"
+                name="firstName"
+                onChange={changeHandler}
+                required
+                requiredErrorText="This field is required"
+                fullWidth
+                end
+              />
+              <TextField
+                value={formData.lastName}
+                label="Last name"
+                variant="outlined"
+                margin="normal"
+                type="text"
+                name="lastName"
+                onChange={changeHandler}
+                required
+                requiredErrorText="This field is required"
+                fullWidth
+              />
+            </div>
             <div>
               <TextField
-                value={formData.username}
+                value={formData.email}
                 label="Email"
                 variant="outlined"
                 margin="normal"
                 type="email"
-                name="username"
+                name="email"
                 onChange={changeHandler}
                 required
                 requiredErrorText="This field is required"
@@ -164,7 +186,7 @@ const LoginPage: React.FC = () => {
                 variant="contained"
                 color="primary"
               >
-                Login
+                Signup
                 {loading && (
                   <CircularProgress
                     className={classes.progress}
@@ -173,7 +195,7 @@ const LoginPage: React.FC = () => {
                   />
                 )}
               </Button>
-              <Link to="/signup">Signup</Link>
+              <Link to="/login">Login</Link>
             </Box>
           </form>
         </Paper>
@@ -182,4 +204,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

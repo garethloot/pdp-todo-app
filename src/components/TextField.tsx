@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import { TextField as MuiTextField } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  end: {
+    marginRight: theme.spacing(2),
+  },
+}));
 
 interface TextFieldProps {
   value: string;
@@ -12,6 +19,7 @@ interface TextFieldProps {
   required?: boolean;
   requiredErrorText?: string;
   fullWidth?: boolean;
+  end?: boolean;
 }
 
 const TextField: React.FC<TextFieldProps> = ({
@@ -25,7 +33,9 @@ const TextField: React.FC<TextFieldProps> = ({
   onChange,
   required,
   requiredErrorText,
+  end,
 }) => {
+  const classes = useStyles();
   const [error, setError] = useState<{
     has: boolean;
     text: string | undefined;
@@ -53,6 +63,7 @@ const TextField: React.FC<TextFieldProps> = ({
   };
   return (
     <MuiTextField
+      className={[end && classes.end].join(" ")}
       value={value}
       name={name}
       type={type}

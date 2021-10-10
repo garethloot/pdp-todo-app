@@ -5,6 +5,7 @@ import {
   TODO_UPDATE_MUTATION,
   TODOS_QUERY,
 } from "./todos";
+import { SIGNUP_MUTATION } from "./signup";
 
 export {
   LOGIN_MUTATION,
@@ -13,4 +14,5 @@ export {
   TODO_DELETE_MUTATION,
   TODO_UPDATE_MUTATION,
   TODOS_QUERY,
+  SIGNUP_MUTATION,
 };

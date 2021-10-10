@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import { TodosPage, LoginPage, Error404 } from "../pages";
+import { TodosPage, LoginPage, SignupPage, Error404 } from "../pages";
 import PrivateRoute from "../components/PrivateRoute";
 
 const RoutingSystem: React.FC = () => {
@@ -14,6 +14,10 @@ const RoutingSystem: React.FC = () => {
 
         <Route path="/login">
           <LoginPage />
+        </Route>
+
+        <Route path="/signup">
+          <SignupPage />
         </Route>
 
         <Route path="*">
