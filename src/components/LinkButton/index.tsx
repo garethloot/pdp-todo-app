@@ -1,12 +1,8 @@
 import { useHistory } from "react-router-dom";
-import { useAppContext } from "./AppContextProvider";
+import { useAppContext } from "../AppContextProvider";
 import { Button } from "@material-ui/core";
 
-interface LinkButtonProps {
-  text: string;
-  to: string;
-  authOnly?: boolean;
-}
+import { LinkButtonProps } from "./types";
 
 const LinkButton: React.FC<LinkButtonProps> = ({ text, to, authOnly }) => {
   const appContext = useAppContext();

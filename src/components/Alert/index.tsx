@@ -3,25 +3,8 @@ import React, { useState } from "react";
 import { Alert as MuiAlert } from "@material-ui/lab";
 import { Fade } from "@material-ui/core";
 
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      borderRadius: "0px",
-      paddingRight: "24px",
-      paddingLeft: "14px",
-    },
-    message: {
-      paddingLeft: "25px",
-    },
-  })
-);
-
-interface AlertProps {
-  text: string;
-  severity: "error" | "info" | "success" | "warning";
-}
+import { AlertProps } from "./types";
+import { useStyles } from "./style";
 
 const Alert: React.FC<AlertProps> = ({ text, severity }) => {
   const classes = useStyles();

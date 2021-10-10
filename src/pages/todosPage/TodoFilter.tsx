@@ -1,6 +1,6 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { todoFilter } from "../../types/todoFilter";
+import { TodoFilterObject } from "../../types/todos";
 
 import Search from "./Search";
 
@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
     width: "100%",
+    alignItems: "center",
   },
   filter: {
     width: "400px",
@@ -32,13 +33,13 @@ const TodoFilter: React.FC<TodoFilterProps> = ({ filterHandler }) => {
     let value: boolean | undefined = undefined;
     if (event.target.value === "completed") value = true;
     if (event.target.value === "todo") value = false;
-    filterHandler((prev: todoFilter) => {
+    filterHandler((prev: TodoFilterObject) => {
       return { ...prev, completed: value };
     });
   };
 
   const searchHandler = (value: string) => {
-    filterHandler((prev: todoFilter) => {
+    filterHandler((prev: TodoFilterObject) => {
       return { ...prev, name: value };
     });
   };

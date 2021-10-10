@@ -23,7 +23,6 @@ const concatErrors = (extensions: any) => {
 };
 
 const getErrorText = (error: ApolloError | undefined): string | undefined => {
-  console.log(error?.graphQLErrors);
   if (error) {
     const errors = error.graphQLErrors.map((value) => {
       return `Error: ${concatErrors(value?.extensions) || value?.message}`;

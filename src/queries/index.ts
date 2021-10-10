@@ -1,11 +1,10 @@
-import { LOGIN_MUTATION, REFRESH_MUTATION } from "./login";
+import { LOGIN_MUTATION, REFRESH_MUTATION, SIGNUP_MUTATION } from "./login";
 import {
   TODO_CREATE_MUTATION,
   TODO_DELETE_MUTATION,
   TODO_UPDATE_MUTATION,
   TODOS_QUERY,
 } from "./todos";
-import { SIGNUP_MUTATION } from "./signup";
 
 export {
   LOGIN_MUTATION,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@apollo/client";
 import { useInView } from "react-intersection-observer";
 import { API_TASK_TAKE } from "../../config";
-import { todoFilter } from "../../types/todoFilter";
+import { TodoFilterObject } from "../../types/todos";
 
 import { TODOS_QUERY } from "../../queries/todos";
 import { TodoInterface } from "../../types/todos";
@@ -56,7 +56,7 @@ interface TodoListProps {
 
 const TodoList: React.FC<TodoListProps> = ({ title }) => {
   const classes = useStyles();
-  const [filter, setFilter] = useState<todoFilter>({
+  const [filter, setFilter] = useState<TodoFilterObject>({
     name: "",
     completed: undefined,
   });

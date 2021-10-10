@@ -1,6 +1,6 @@
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
-import NavigationBar from "../components/NavigationBar";
+import { NavigationBar } from "../components";
 
 const useStyles = makeStyles<Theme>((theme: Theme) =>
   createStyles({

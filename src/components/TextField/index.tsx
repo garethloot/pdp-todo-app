@@ -1,26 +1,8 @@
 import React, { useState } from "react";
 import { TextField as MuiTextField } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
-  end: {
-    marginRight: theme.spacing(2),
-  },
-}));
-
-interface TextFieldProps {
-  value: string;
-  onChange?: Function;
-  type?: string;
-  name?: string;
-  label?: string;
-  variant?: "filled" | "outlined" | "standard";
-  margin?: "none" | "dense" | "normal";
-  required?: boolean;
-  requiredErrorText?: string;
-  fullWidth?: boolean;
-  end?: boolean;
-}
+import { useStyles } from "./style";
+import { TextFieldProps } from "./types";
 
 const TextField: React.FC<TextFieldProps> = ({
   value,

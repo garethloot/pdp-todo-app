@@ -21,7 +21,7 @@ import {
   Fade,
   InputBase,
 } from "@material-ui/core";
-import Alert from "../../components/Alert";
+import { Alert } from "../../components";
 import { DeleteOutline, KeyboardReturn } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) => ({

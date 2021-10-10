@@ -1,11 +1,8 @@
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
-interface ContainerProps {
-  top?: boolean;
-  color?: string;
-}
+import { ContainerProps } from "./types";
 
-const useStyles = makeStyles<Theme, ContainerProps>((theme: Theme) =>
+export const useStyles = makeStyles<Theme, ContainerProps>((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
@@ -16,10 +13,3 @@ const useStyles = makeStyles<Theme, ContainerProps>((theme: Theme) =>
     },
   })
 );
-
-const Container: React.FC<ContainerProps> = ({ children, top, color }) => {
-  const classes = useStyles({ top, color });
-  return <div className={classes.root}>{children}</div>;
-};
-
-export default Container;

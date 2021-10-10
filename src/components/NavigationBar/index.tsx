@@ -1,6 +1,5 @@
-import { useAppContext } from "./AppContextProvider";
+import { useAppContext } from "../AppContextProvider";
 import { useHistory } from "react-router";
-import { makeStyles, Theme } from "@material-ui/core/styles";
 import {
   AppBar,
   Toolbar,
@@ -10,16 +9,8 @@ import {
 } from "@material-ui/core";
 import CloudDone from "@material-ui/icons/CloudDone";
 
-import LinkButton from "./LinkButton";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
+import { LinkButton } from "../";
+import { useStyles } from "./style";
 
 const NavigationBar: React.FC = () => {
   const classes = useStyles();

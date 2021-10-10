@@ -15,7 +15,7 @@ import { AddBox } from "@material-ui/icons";
 
 import { TodoInputVars, NewTodoProps } from "../../types/todos";
 import { TODO_CREATE_MUTATION } from "../../queries/todos";
-import Alert from "../../components/Alert";
+import { Alert } from "../../components";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
