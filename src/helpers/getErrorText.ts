@@ -1,33 +1,32 @@
 import { ApolloError } from "@apollo/client/errors";
 
-const concatErrors = (extensions: any) => {
-  if (extensions.error) {
-    const errors: string[] = [];
-    for (const objectName in extensions.error) {
-      const object = extensions.error[objectName];
-      let errorArray = [];
-      for (const errorName in object) {
-        const error = extensions.error[objectName][errorName];
-        const replaceDashes = error.map((text: string) =>
-          text.replaceAll("_", " ")
-        );
-        errorArray.push(
-          `${errorName.replaceAll("_", " ")} ${replaceDashes.join("and ")} `
-        );
-      }
-      errors.push(`${objectName} - ${errorArray.join(", ")}`);
-    }
-    return errors.join(". ");
-  }
-  return undefined;
+const formatError = (err: ApolloError) => {
+  const errorMessage =
+    (err.graphQLErrors &&
+      err.graphQLErrors[0] &&
+      err.graphQLErrors[0].extensions?.error) ||
+    err.message;
+  const errorTitle =
+    (err.graphQLErrors &&
+      err.graphQLErrors[0] &&
+      err.graphQLErrors[0].message) ||
+    (err.networkError && err.networkError.message);
+  return [errorTitle, errorMessage];
 };
+
+const cleanUpMessage = (message: any) =>
+  message &&
+  JSON.stringify(message)
+    .replace(/[{}[\]_"]/g, " ")
+    .replace(/[ ]+/g, " ")
+    .replace(/ :/g, ":")
+    .replace(/ ,/g, ",")
+    .trim();
 
 const getErrorText = (error: ApolloError | undefined): string | undefined => {
   if (error) {
-    const errors = error.graphQLErrors.map((value) => {
-      return `Error: ${concatErrors(value?.extensions) || value?.message}`;
-    });
-    return errors.join(" ");
+    const [, errorMessage] = formatError(error);
+    return cleanUpMessage(errorMessage);
   }
   return undefined;
 };
