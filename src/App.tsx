@@ -1,22 +1,18 @@
 import React from "react";
-import { ApolloProvider } from "@apollo/client";
 import client from "./helpers/appoloClient";
-
 import RoutingSystem from "./router/RoutingSystem";
-import AppContextProvider from "./components/AppContextProvider";
+import { ApolloProvider } from "@apollo/client";
+import { ThemeProvider } from "@material-ui/styles";
+import { theme } from "./theme";
+import { AppContextProvider } from "./components";
 
-import NavigationBar from "./components/NavigationBar";
-
-const App: React.FC = () => {
-  return (
-    <ApolloProvider client={client}>
-      <AppContextProvider>
-        <RoutingSystem>
-          <NavigationBar />
-        </RoutingSystem>
-      </AppContextProvider>
-    </ApolloProvider>
-  );
-};
-
+const App: React.FC = () => (
+  <ApolloProvider client={client}>
+    <AppContextProvider>
+      <ThemeProvider theme={theme}>
+        <RoutingSystem />
+      </ThemeProvider>
+    </AppContextProvider>
+  </ApolloProvider>
+);
 export default App;

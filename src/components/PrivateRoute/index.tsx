@@ -1,10 +1,9 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { useAppContext } from "./AppContextProvider";
+import { useAppContext } from "../AppContextProvider";
 
-interface PrivateRouteProps {
-  path: string;
-}
+import { PrivateRouteProps } from "./types";
+
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, ...rest }) => {
   const appContext = useAppContext();
   return (

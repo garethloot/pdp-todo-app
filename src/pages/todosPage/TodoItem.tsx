@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 
+import getErrorText from "../../helpers/getErrorText";
+
 import {
   TODO_DELETE_MUTATION,
   TODO_UPDATE_MUTATION,
@@ -13,26 +15,22 @@ import {
   ListItemSecondaryAction,
   ListItemIcon,
   Checkbox,
-  Paper,
+  Divider,
   IconButton,
   CircularProgress,
   Fade,
   InputBase,
 } from "@material-ui/core";
-import { Delete, KeyboardReturn } from "@material-ui/icons";
+import { Alert } from "../../components";
+import { DeleteOutline, KeyboardReturn } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) => ({
   input: {
     flex: 1,
   },
-  item: {
-    marginBottom: theme.spacing(2),
-    paddingTop: "2px",
-    paddingBottom: "2px",
-  },
 }));
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo: item }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo: item, onDeleteTodo }) => {
   const classes = useStyles();
   const [value, setValue] = useState<{
     todo: TodoInterface;
@@ -41,39 +39,41 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item }) => {
   }>({ todo: item, prev: item, hasChange: false });
   const [visible, setVisible] = useState(true);
 
-  const [deleteMutation] = useMutation<any, TodoInputVars>(
-    TODO_DELETE_MUTATION,
-    {
-      onCompleted: (data) => {},
-      onError: (error) => {
-        setVisible(true);
-      },
-    }
-  );
+  const [deleteMutation, { error: deleteError }] = useMutation<
+    any,
+    TodoInputVars
+  >(TODO_DELETE_MUTATION, {
+    onCompleted: (data) => {
+      onDeleteTodo(todo);
+    },
+    onError: (error) => {
+      setVisible(true);
+    },
+  });
 
-  const [updateMutation, { loading }] = useMutation<any, TodoInputVars>(
-    TODO_UPDATE_MUTATION,
-    {
-      onCompleted: (data) => {
-        setValue((prevValue) => {
-          return {
-            todo: prevValue.todo,
-            prev: prevValue.todo,
-            hasChange: false,
-          };
-        });
-      },
-      onError: (error) => {
-        setValue((prevValue) => {
-          return {
-            todo: prevValue.prev,
-            prev: prevValue.prev,
-            hasChange: false,
-          };
-        });
-      },
-    }
-  );
+  const [updateMutation, { loading, error: updateError }] = useMutation<
+    any,
+    TodoInputVars
+  >(TODO_UPDATE_MUTATION, {
+    onCompleted: (data) => {
+      setValue((prevValue) => {
+        return {
+          todo: prevValue.todo,
+          prev: prevValue.todo,
+          hasChange: false,
+        };
+      });
+    },
+    onError: (error) => {
+      setValue((prevValue) => {
+        return {
+          todo: prevValue.prev,
+          prev: prevValue.prev,
+          hasChange: false,
+        };
+      });
+    },
+  });
 
   const deleteHandler = (event: React.FormEvent) => {
     deleteMutation({
@@ -103,7 +103,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item }) => {
   const applyChanges = () => {
     if (value.todo.name !== value.prev.name) {
       setValue((prevValue) => {
-        return { todo: prevValue.todo, prev: prevValue.todo, hasChange: true };
+        return { todo: prevValue.todo, prev: prevValue.prev, hasChange: true };
       });
     }
   };
@@ -122,18 +122,21 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item }) => {
         },
       });
     }
-  }, [value]);
+  }, [value, updateMutation]);
 
   const { todo } = value;
 
+  const errorText = getErrorText(updateError) || getErrorText(deleteError);
+
   return visible ? (
     <Fade in>
-      <Paper className={classes.item}>
+      <>
         <ListItem>
           <ListItemIcon>
             <Checkbox
               edge="start"
               checked={todo.completed}
+              color="primary"
               onChange={changeCompletedHandler}
               disabled={loading}
             />
@@ -159,11 +162,13 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item }) => {
               </IconButton>
             )}
             <IconButton edge="end" onClick={deleteHandler} disabled={loading}>
-              <Delete />
+              <DeleteOutline />
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem>
-      </Paper>
+        {errorText && <Alert severity="error" text={errorText} />}
+        <Divider />
+      </>
     </Fade>
   ) : (
     <></>

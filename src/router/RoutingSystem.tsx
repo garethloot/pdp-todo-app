@@ -1,15 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import { TodosPage, LoginPage } from "../pages";
-import PrivateRoute from "../components/PrivateRoute";
+import { TodosPage, LoginPage, SignupPage, Error404 } from "../pages";
+import { PrivateRoute } from "../components";
 
-const RoutingSystem: React.FC = ({ children }) => {
+const RoutingSystem: React.FC = () => {
   return (
     <Router>
-      {children}
       <Switch>
-        <PrivateRoute path="/todos">
+        <PrivateRoute exact path="/">
           <TodosPage />
         </PrivateRoute>
 
@@ -17,8 +16,12 @@ const RoutingSystem: React.FC = ({ children }) => {
           <LoginPage />
         </Route>
 
+        <Route path="/signup">
+          <SignupPage />
+        </Route>
+
         <Route path="*">
-          <h1>404</h1>
+          <Error404 />
         </Route>
       </Switch>
     </Router>

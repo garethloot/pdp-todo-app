@@ -1,17 +1,12 @@
-import { Typography } from "@material-ui/core";
+import PrivateLayout from "../layout/PrivateLayout";
 
 // Components
-import TodoList from "./todos/TodoList";
+import TodoList from "./todosPage/TodoList";
 
-const TodosPage: React.FC = () => {
-  return (
-    <div>
-      <Typography variant="h1" component="h2">
-        Task overview
-      </Typography>
-      <TodoList />
-    </div>
-  );
-};
+const TodosPage: React.FC = () => (
+  <PrivateLayout>
+    <TodoList title="My Tasks" />
+  </PrivateLayout>
+);
 
 export default TodosPage;

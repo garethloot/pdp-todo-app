@@ -19,3 +19,9 @@ export const REFRESH_MUTATION = gql`
     }
   }
 `;
+
+export const SIGNUP_MUTATION = gql`
+  mutation action($input: ActionInput!) {
+    actionb5(uuid: "account/signup", input: $input)
+  }
+`;

@@ -1,26 +1,17 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { useMutation } from "@apollo/client";
-import { REFRESH_MUTATION } from "../queries";
+import { REFRESH_MUTATION } from "../../queries";
 
 import { CircularProgress, Fade } from "@material-ui/core";
-import { makeStyles, Theme } from "@material-ui/core/styles";
 
-import { AppContext } from "../store/authContext";
-import { RefreshLoginInputVars } from "../types/auth";
+import { AppContext } from "../../store/authContext";
+import { RefreshLoginInputVars } from "../../types/auth";
+import { useStyles } from "./style";
+import { AppContextProviderProps } from "./types";
 
 export const useAppContext = () => useContext(AppContext);
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    width: "100vw",
-  },
-}));
-
-const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
+const AppContextProvider: React.FC<AppContextProviderProps> = ({
   children,
 }) => {
   const classes = useStyles();
@@ -46,17 +37,15 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
         if (isValid) {
           loginUser(jwtToken, refreshToken);
         }
-        console.log("Complete");
         setFirstLoad(false);
       },
       onError: (error) => {
-        console.log("Error");
         setFirstLoad(false);
       },
     }
   );
 
-  const checkLogin = () => {
+  const checkLogin = useCallback(() => {
     const token = window.localStorage.getItem("refresh_token");
     if (token) {
       loginMutation({
@@ -67,12 +56,11 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       setFirstLoad(false);
     }
-  };
+  }, [setFirstLoad, loginMutation]);
 
   useEffect(() => {
-    console.log("Mount");
     checkLogin();
-  }, []);
+  }, [checkLogin]);
 
   return firstLoad ? (
     <div className={classes.root}>

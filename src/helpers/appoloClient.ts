@@ -6,21 +6,22 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
+import { API_URL } from "../config";
 
 const httpLink = createHttpLink({
-  uri: "https://pdp-todo-app-dev.betty.app/api/runtime/bb79b5f831cb4120a2352e3a07aad4dc",
+  uri: API_URL,
 });
 
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
-      console.log("graphQLErrors", graphQLErrors);
+      // console.log("graphQLErrors", graphQLErrors);
     }
 
     // To retry on network errors, we recommend the RetryLink
     // instead of the onError link. This just logs the error.
     if (networkError) {
-      console.log(`[Network error]: ${networkError}`);
+      // console.log(`[Network error]: ${networkError}`);
     }
   }
 );
