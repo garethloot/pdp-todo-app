@@ -8,8 +8,9 @@ import { AppContext } from "../../store/authContext";
 import { RefreshLoginInputVars } from "../../types/auth";
 import { useStyles } from "./style";
 import { AppContextProviderProps } from "./types";
+import { Context } from "../../store/authContext";
 
-export const useAppContext = () => useContext(AppContext);
+export const useAppContext = (): Context => useContext(AppContext);
 
 const AppContextProvider: React.FC<AppContextProviderProps> = ({
   children,

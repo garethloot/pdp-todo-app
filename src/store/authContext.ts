@@ -8,6 +8,6 @@ export type Context = {
 
 export const AppContext = createContext<Context>({
   isAuthenticated: false,
-  loginUser: (jwtToken: string, refreshToken: string) => undefined,
+  loginUser: () => undefined,
   logoutUser: () => undefined,
 });
