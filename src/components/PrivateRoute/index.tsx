@@ -4,7 +4,10 @@ import { useAppContext } from "../AppContextProvider";
 
 import { PrivateRouteProps } from "./types";
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, ...rest }) => {
+const PrivateRoute: React.FC<PrivateRouteProps> = ({
+  children,
+  ...rest
+}: PrivateRouteProps) => {
   const appContext = useAppContext();
   return (
     <Route

@@ -16,7 +16,7 @@ const TextField: React.FC<TextFieldProps> = ({
   required,
   requiredErrorText,
   end,
-}) => {
+}: TextFieldProps) => {
   const classes = useStyles();
   const [error, setError] = useState<{
     has: boolean;

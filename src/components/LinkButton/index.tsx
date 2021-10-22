@@ -4,7 +4,11 @@ import { Button } from "@material-ui/core";
 
 import { LinkButtonProps } from "./types";
 
-const LinkButton: React.FC<LinkButtonProps> = ({ text, to, authOnly }) => {
+const LinkButton: React.FC<LinkButtonProps> = ({
+  text,
+  to,
+  authOnly,
+}: LinkButtonProps) => {
   const appContext = useAppContext();
   const history = useHistory();
   const loginClickHandler = () => {

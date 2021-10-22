@@ -54,7 +54,7 @@ interface TodoListProps {
   title: string;
 }
 
-const TodoList: React.FC<TodoListProps> = ({ title }) => {
+const TodoList: React.FC<TodoListProps> = ({ title }: TodoListProps) => {
   const classes = useStyles();
   const [filter, setFilter] = useState<TodoFilterObject>({
     name: "",

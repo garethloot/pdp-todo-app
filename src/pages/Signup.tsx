@@ -73,10 +73,10 @@ const SignupPage: React.FC = () => {
   const [signupMutation, { loading, error }] = useMutation<any, InputVars>(
     SIGNUP_MUTATION,
     {
-      onCompleted: (data) => {
+      onCompleted: () => {
         history.push("/login");
       },
-      onError: (error) => {},
+      onError: (error) => console.log(error),
     }
   );
 

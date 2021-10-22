@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Page: React.FC = () => {
   const classes = useStyles();
-  let history = useHistory();
+  const history = useHistory();
   return (
     <Grid
       container

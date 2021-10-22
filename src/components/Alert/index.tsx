@@ -6,7 +6,7 @@ import { Fade } from "@material-ui/core";
 import { AlertProps } from "./types";
 import { useStyles } from "./style";
 
-const Alert: React.FC<AlertProps> = ({ text, severity }) => {
+const Alert: React.FC<AlertProps> = ({ text, severity }: AlertProps) => {
   const classes = useStyles();
   const [visible, setVisible] = useState(true);
   return visible ? (

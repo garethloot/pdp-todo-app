@@ -13,7 +13,13 @@ const useStyles = makeStyles<Theme>((theme: Theme) =>
   })
 );
 
-const PrivateLayout: React.FC = ({ children }) => {
+interface PrivateRouteProps {
+  children?: React.ReactNode;
+}
+
+const PrivateLayout: React.FC<PrivateRouteProps> = ({
+  children,
+}: PrivateRouteProps) => {
   const classes = useStyles();
   return (
     <>

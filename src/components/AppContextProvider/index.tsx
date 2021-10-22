@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useMutation } from "@apollo/client";
 import { REFRESH_MUTATION } from "../../queries";
 
@@ -13,7 +13,7 @@ export const useAppContext = () => useContext(AppContext);
 
 const AppContextProvider: React.FC<AppContextProviderProps> = ({
   children,
-}) => {
+}: AppContextProviderProps) => {
   const classes = useStyles();
   const [isAuthenticated, setAuthentication] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -39,7 +39,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({
         }
         setFirstLoad(false);
       },
-      onError: (error) => {
+      onError: () => {
         setFirstLoad(false);
       },
     }

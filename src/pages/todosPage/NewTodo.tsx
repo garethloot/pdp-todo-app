@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const NewTodo: React.FC<NewTodoProps> = ({ onNewTodo }) => {
+const NewTodo: React.FC<NewTodoProps> = ({ onNewTodo }: NewTodoProps) => {
   const classes = useStyles();
   const [formData, setFormData] = useState<{
     name: string;
@@ -60,7 +60,7 @@ const NewTodo: React.FC<NewTodoProps> = ({ onNewTodo }) => {
         const { id, completed, name } = data.actionb5;
         onNewTodo({ id, completed, name });
       },
-      onError: (error) => {},
+      onError: (error) => console.log(error),
     }
   );
 

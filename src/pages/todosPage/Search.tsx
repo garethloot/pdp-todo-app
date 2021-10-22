@@ -22,7 +22,7 @@ interface SearchProps {
   searchHandler: (value: string) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ searchHandler }) => {
+const Search: React.FC<SearchProps> = ({ searchHandler }: SearchProps) => {
   const classes = useStyles();
   let timer: ReturnType<typeof setTimeout>;
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {

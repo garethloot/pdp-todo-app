@@ -1,6 +1,8 @@
+import { ChangeEvent } from "react";
+
 export interface TextFieldProps {
   value: string;
-  onChange?: Function;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   name?: string;
   label?: string;

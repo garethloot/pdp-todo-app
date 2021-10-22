@@ -9,7 +9,7 @@ import {
 } from "../../queries/todos";
 import { TodoInterface, TodoItemProps, TodoInputVars } from "../../types/todos";
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   ListItem,
   ListItemSecondaryAction,
@@ -24,13 +24,16 @@ import {
 import { Alert } from "../../components";
 import { DeleteOutline, KeyboardReturn } from "@material-ui/icons";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   input: {
     flex: 1,
   },
 }));
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo: item, onDeleteTodo }) => {
+const TodoItem: React.FC<TodoItemProps> = ({
+  todo: item,
+  onDeleteTodo,
+}: TodoItemProps) => {
   const classes = useStyles();
   const [value, setValue] = useState<{
     todo: TodoInterface;
@@ -43,10 +46,10 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item, onDeleteTodo }) => {
     any,
     TodoInputVars
   >(TODO_DELETE_MUTATION, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       onDeleteTodo(todo);
     },
-    onError: (error) => {
+    onError: () => {
       setVisible(true);
     },
   });
@@ -55,7 +58,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item, onDeleteTodo }) => {
     any,
     TodoInputVars
   >(TODO_UPDATE_MUTATION, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       setValue((prevValue) => {
         return {
           todo: prevValue.todo,
@@ -65,6 +68,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item, onDeleteTodo }) => {
       });
     },
     onError: (error) => {
+      console.log(error);
       setValue((prevValue) => {
         return {
           todo: prevValue.prev,
@@ -75,7 +79,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: item, onDeleteTodo }) => {
     },
   });
 
-  const deleteHandler = (event: React.FormEvent) => {
+  const deleteHandler = () => {
     deleteMutation({
       variables: {
         input: { form_data: value.todo },

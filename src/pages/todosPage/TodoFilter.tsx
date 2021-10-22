@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { TodoFilterObject } from "../../types/todos";
 
 import Search from "./Search";
@@ -13,7 +13,7 @@ import {
 
 import { TodoFilterProps } from "../../types/todos";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     width: "100%",
@@ -26,7 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TodoFilter: React.FC<TodoFilterProps> = ({ filterHandler }) => {
+const TodoFilter: React.FC<TodoFilterProps> = ({
+  filterHandler,
+}: TodoFilterProps) => {
   const classes = useStyles();
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
