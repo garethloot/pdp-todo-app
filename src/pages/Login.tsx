@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
           history.push("/");
         }
       },
-      onError: (error) => {},
+      onError: (error) => console.log(error),
     }
   );
 
